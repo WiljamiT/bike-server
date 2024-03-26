@@ -2,21 +2,8 @@ const express = require('express');
 const csv = require('csv-parser');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-const rateLimit = require('express-rate-limit');
 
 const app = express();
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
-
-const limiter = rateLimit({
-    windowMs: 5 * 60 * 1000, 
-    max: 10
-});
-app.use(limiter);
 
 const db = new sqlite3.Database(':memory:');
 db.serialize(() => {
