@@ -5,6 +5,13 @@ const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
+
 const db = new sqlite3.Database(':memory:');
 db.serialize(() => {
     db.run("CREATE TABLE bikes (ID INTEGER, Nimi TEXT, Namn TEXT, Name TEXT, Osoite TEXT, Adress TEXT, Kaupunki TEXT, Stad TEXT, Operaattor TEXT, Kapasiteet INTEGER, x REAL, y REAL)");
@@ -20,6 +27,8 @@ db.serialize(() => {
             console.log('CSV file successfully processed and data inserted into the database');
         });
 });
+
+
 
 app.get('/bikes', (req, res) => {
     db.all("SELECT ID, Nimi, Namn, Name, Osoite, Adress, Kaupunki, Stad, Operaattor, Kapasiteet, x, y FROM bikes", (err, rows) => {
